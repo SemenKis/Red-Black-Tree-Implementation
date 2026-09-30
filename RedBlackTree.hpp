@@ -27,10 +27,14 @@ private:
 
     Node* root;
 
+    void printInOrder(Node* node) const;
+
 public:
     RedBlackTree();
 
     bool empty() const;
+    void insert(int key);
+    void print() const;
 };
 
 #endif
