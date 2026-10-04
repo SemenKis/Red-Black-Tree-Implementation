@@ -192,3 +192,261 @@ void RedBlackTree::balance(Node* node) {
 
     root->color = BLACK;
 }
+
+void RedBlackTree::fixRulesAfterRemoval(Node* node, Node* parent) {
+    while (node != root &&
+           (node == nullptr || node->color == BLACK)) {
+
+        if (parent == nullptr) {
+            break;
+        }
+
+        // node is the left child
+        if (node == parent->left) {
+            Node* brother = parent->right;
+
+            if (brother == nullptr) {
+                node = parent;
+                parent = node->parent;
+                continue;
+            }
+
+            // Case 1: brother is RED
+            if (brother->color == RED) {
+                brother->color = BLACK;
+                parent->color = RED;
+
+                leftRotate(parent);
+
+                brother = parent->right;
+            }
+
+            // Case 2: both brother's children are BLACK
+            bool leftBlack =
+                brother->left == nullptr ||
+                brother->left->color == BLACK;
+
+            bool rightBlack =
+                brother->right == nullptr ||
+                brother->right->color == BLACK;
+
+            if (leftBlack && rightBlack) {
+                brother->color = RED;
+
+                node = parent;
+                parent = node->parent;
+            }
+            else {
+                // Case 3: brother's right child is BLACK
+                if (brother->right == nullptr ||
+                    brother->right->color == BLACK) {
+
+                    if (brother->left != nullptr) {
+                        brother->left->color = BLACK;
+                    }
+
+                    brother->color = RED;
+
+                    rightRotate(brother);
+
+                    brother = parent->right;
+                }
+
+                // Case 4
+                brother->color = parent->color;
+                parent->color = BLACK;
+
+                if (brother->right != nullptr) {
+                    brother->right->color = BLACK;
+                }
+
+                leftRotate(parent);
+
+                node = root;
+                parent = nullptr;
+            }
+        }
+
+        // node is the right child
+        else {
+            Node* brother = parent->left;
+
+            if (brother == nullptr) {
+                node = parent;
+                parent = node->parent;
+                continue;
+            }
+
+            // Case 1: brother is RED
+            if (brother->color == RED) {
+                brother->color = BLACK;
+                parent->color = RED;
+
+                rightRotate(parent);
+
+                brother = parent->left;
+            }
+
+            // Case 2: both brother's children are BLACK
+            bool leftBlack =
+                brother->left == nullptr ||
+                brother->left->color == BLACK;
+
+            bool rightBlack =
+                brother->right == nullptr ||
+                brother->right->color == BLACK;
+
+            if (leftBlack && rightBlack) {
+                brother->color = RED;
+
+                node = parent;
+                parent = node->parent;
+            }
+            else {
+                // Case 3: brother's left child is BLACK
+                if (brother->left == nullptr ||
+                    brother->left->color == BLACK) {
+
+                    if (brother->right != nullptr) {
+                        brother->right->color = BLACK;
+                    }
+
+                    brother->color = RED;
+
+                    leftRotate(brother);
+
+                    brother = parent->left;
+                }
+
+                // Case 4
+                brother->color = parent->color;
+                parent->color = BLACK;
+
+                if (brother->left != nullptr) {
+                    brother->left->color = BLACK;
+                }
+
+                rightRotate(parent);
+
+                node = root;
+                parent = nullptr;
+            }
+        }
+    }
+
+    if (node != nullptr) {
+        node->color = BLACK;
+    }
+}
+
+RedBlackTree::Node* RedBlackTree::search(Node* node, int key) const {
+    while (node != nullptr) {
+        if (key == node->key) {
+            return node;
+        }
+
+        if (key < node->key) {
+            node = node->left;
+        }
+        else {
+            node = node->right;
+        }
+    }
+
+    return nullptr;
+}
+
+RedBlackTree::Node* RedBlackTree::minimum(Node* node) const {
+    while (node->left != nullptr) {
+        node = node->left;
+    }
+
+    return node;
+}
+
+void RedBlackTree::transplant(Node* oldNode, Node* newNode) {
+    if (oldNode->parent == nullptr) {
+        root = newNode;
+    }
+    else if (oldNode == oldNode->parent->left) {
+        oldNode->parent->left = newNode;
+    }
+    else {
+        oldNode->parent->right = newNode;
+    }
+
+    if (newNode != nullptr) {
+        newNode->parent = oldNode->parent;
+    }
+}
+
+void RedBlackTree::remove(int key) {
+    std::cout << "Remove the element: " << key << std::endl;
+
+    Node* nodeToDelete = search(root, key);
+
+    if (nodeToDelete == nullptr) {
+        std::cout << "Element not found" << std::endl;
+        return;
+    }
+
+    Node* replacement = nodeToDelete;
+    Color removedColor = replacement->color;
+
+    Node* child = nullptr;
+    Node* childParent = nullptr;
+
+    // Case 1: no left child
+    if (nodeToDelete->left == nullptr) {
+        child = nodeToDelete->right;
+        childParent = nodeToDelete->parent;
+
+        transplant(nodeToDelete, nodeToDelete->right);
+    }
+
+    // Case 2: no right child
+    else if (nodeToDelete->right == nullptr) {
+        child = nodeToDelete->left;
+        childParent = nodeToDelete->parent;
+
+        transplant(nodeToDelete, nodeToDelete->left);
+    }
+
+    // Case 3: two children
+    else {
+        replacement = minimum(nodeToDelete->right);
+
+        removedColor = replacement->color;
+        child = replacement->right;
+
+        if (replacement->parent == nodeToDelete) {
+            childParent = replacement;
+
+            if (child != nullptr) {
+                child->parent = replacement;
+            }
+        }
+        else {
+            childParent = replacement->parent;
+
+            transplant(replacement, replacement->right);
+
+            replacement->right = nodeToDelete->right;
+            replacement->right->parent = replacement;
+        }
+
+        transplant(nodeToDelete, replacement);
+
+        replacement->left = nodeToDelete->left;
+        replacement->left->parent = replacement;
+
+        replacement->color = nodeToDelete->color;
+    }
+
+    delete nodeToDelete;
+
+    // Removing a black node may violate RB properties
+    if (removedColor == BLACK) {
+        fixRulesAfterRemoval(child, childParent);
+    }
+}

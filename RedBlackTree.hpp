@@ -28,10 +28,14 @@ private:
     Node* root;
 
     void printInOrder(Node* node) const;
-
     void leftRotate(Node* node);
     void rightRotate(Node* node);
     void balance(Node* node);
+    void fixRulesAfterRemoval(Node* node, Node* parent);
+
+    Node* search(Node* node, int key) const;
+    Node* minimum(Node* node) const;
+    void transplant(Node* oldNode, Node* newNode);
 
 public:
     RedBlackTree();
@@ -39,6 +43,7 @@ public:
     bool empty() const;
     void insert(int key);
     void print() const;
+    void remove(int key);
 };
 
 #endif
