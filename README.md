@@ -24,6 +24,10 @@ The current implementation stores integer values.
 - `RedBlackTree.cpp` - implementation of the tree
 - `main.cpp` - testing and examples
 
+## How to Compile
+Use the following command
+- `g++ main.cpp RedBlackTree.cpp -o main`
+
 ## Example
 
 ```cpp
