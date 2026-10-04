@@ -97,3 +97,15 @@ target_link_libraries(
 include(GoogleTest)
 
 gtest_discover_tests(tree_tests)
+
+add_executable(
+    tree_benchmark
+    benchmark/benchmark.cpp
+)
+
+target_link_libraries(
+    tree_benchmark
+    PRIVATE
+    red_black_tree
+    avl_tree
+)
