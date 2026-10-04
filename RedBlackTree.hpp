@@ -29,6 +29,10 @@ private:
 
     void printInOrder(Node* node) const;
 
+    void leftRotate(Node* node);
+    void rightRotate(Node* node);
+    void balance(Node* node);
+
 public:
     RedBlackTree();
 
