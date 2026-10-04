@@ -28,7 +28,7 @@ bool RedBlackTree::empty() const {
 
 void RedBlackTree::insert(int key) {
 
-    std::cout << "Insert the element: " << key << std::endl;
+    // std::cout << "Insert the element: " << key << std::endl;
 
     Node* newNode = new Node(key);
 
@@ -60,7 +60,7 @@ void RedBlackTree::insert(int key) {
 
 void RedBlackTree::leftRotate(Node* node) {
 
-    std::cout << "leftRotate() is called" << std::endl;
+    // std::cout << "leftRotate() is called" << std::endl;
 
     Node* rightChild = node->right;
 
@@ -88,7 +88,7 @@ void RedBlackTree::leftRotate(Node* node) {
 
 void RedBlackTree::rightRotate(Node* node) {
 
-    std::cout << "rightRotate() is called" << std::endl;
+    // std::cout << "rightRotate() is called" << std::endl;
 
     Node* leftChild = node->left;
 
@@ -116,7 +116,7 @@ void RedBlackTree::rightRotate(Node* node) {
 
 void RedBlackTree::balance(Node* node) {
 
-    std::cout << "Balance the tree" << std::endl;
+    // std::cout << "Balance the tree" << std::endl;
 
     while (node != root &&
            node->parent != nullptr &&
@@ -381,7 +381,7 @@ void RedBlackTree::transplant(Node* oldNode, Node* newNode) {
 }
 
 void RedBlackTree::remove(int key) {
-    std::cout << "Remove the element: " << key << std::endl;
+    // std::cout << "Remove the element: " << key << std::endl;
 
     Node* nodeToDelete = search(root, key);
 

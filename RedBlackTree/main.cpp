@@ -17,12 +17,12 @@ int main() {
     tree.insert(4);
     tree.insert(8);
 
-    std::cout << "Tree elements: ";
+    // std::cout << "Tree elements: ";
     tree.print();
 
     tree.remove(8);
 
-    std::cout << "Tree elements after deletion: ";
+    // std::cout << "Tree elements after deletion: ";
     tree.print();
 
     RedBlackTree tree_2;
@@ -31,7 +31,7 @@ int main() {
     tree_2.insert(5);
     tree_2.insert(3);
 
-    std::cout << "Tree_2 elements: ";
+    // std::cout << "Tree_2 elements: ";
     tree_2.print();
     
     return 0;
